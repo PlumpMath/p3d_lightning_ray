@@ -4,7 +4,6 @@ loadPrcFileData("", "window-title Press SPACE")
 from direct.showbase import ShowBase
 from direct.showbase.DirectObject import DirectObject
 from direct.interval.IntervalGlobal import *
-from direct.gui.DirectGui import *
 import random
 
 def make_lightning(start, end, count=12):
@@ -18,8 +17,7 @@ def make_lightning(start, end, count=12):
     ray.setShader(Shader.load(Shader.SLGLSL, 'lightning_v.glsl','lightning_f.glsl'))
     ray.set_shader_input('start_time', globalClock.get_frame_time())
     ray.set_shader_input('max_length', distance)
-    delete=Func(ray.remove_node)
-    Sequence(Wait(time+0.5), delete).start()
+    Sequence(Wait(time+0.5), Func(ray.remove_node)).start()
 
 
 class Demo(DirectObject):
@@ -43,10 +41,6 @@ class Demo(DirectObject):
         dt = globalClock.getDt()
         self.ray.set_h(self.ray, 15.0*dt)
         return task.cont
-
-    def set_slider_input(self):
-        v=float(self.slider['value'])
-        render.set_shader_input('length', v)
 
 d=Demo()
 base.run()
